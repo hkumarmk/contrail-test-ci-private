@@ -38,15 +38,25 @@ A script provided (install.sh) to install both contrail-test-ci as well as contr
       --test-artifact ARTIFACT      Contrail test tar file - this tar file will be used instead of git source in case provided
       --ci-artifact CI_ARTICACT     Contrail test ci tar file
       --fab-artifact FAB_ARTIFACT   Contrail-fabric-utils tar file
-      -u|--package-url PACKAGE_URL  Contrail-install-packages deb package web url, if url is provided, the
+      -u|--package-url PACKAGE_URL  Contrail-install-packages deb package web url (http:// or https://) or scp path
+                                    (ssh://<server ip/name/< package path>), if url is provided, the
                                     package will be installed and setup local repo.
-
+                                    In case of scp, user name and password will be read from environment variables
+                                    SSHUSER - user name to be used during scp
+                                    SSHPASS - user password to be used during scp
       positional arguments
         What to install             Valid options are contrail-test, contrail-test-ci
 
      Example:
 
-      ./install.sh install --test-repo https://github.com/hkumarmk/contrail-test --test-ref working --ci-repo https://$GITUSER:$GITPASS@github.com/juniper/contrail-test-ci -e /tmp/export2 -u http://nodei16/contrail-install-packages_2.21-105~juno_all.deb contrail-test
+        ./install.sh install --test-repo https://github.com/hkumarmk/contrail-test --test-ref working
+        --ci-repo https://$GITUSER:$GITPASS@github.com/juniper/contrail-test-ci -e /tmp/export2
+        -u http://nodei16/contrail-install-packages_2.21-105~juno_all.deb contrail-test
+
+        $ export SSHUSER=user1 SSHPASS=password
+        $ ./install.sh install --test-repo https://github.com/hkumarmk/contrail-test --test-ref working
+            --ci-repo https://$GITUSER:$GITPASS@github.com/juniper/contrail-test-ci -e /tmp/export2
+            -u ssh://nodei16/var/cache/artifacts/contrail-install-packages_2.21-105~juno_all.deb contrail-test-ci
 
     - Install with artifacts
 
@@ -239,7 +249,12 @@ There is a script (install.sh) which build docker containers for both contrail-t
       --test-artifact ARTIFACT        Contrail test tar file - this tar file will be used instead of git source in case provided
       --ci-artifact CI_ARTICACT     Contrail test ci tar file
       --fab-artifact FAB_ARTIFACT   Contrail-fabric-utils tar file
-      -u|--package-url PACKAGE_URL  Contrail-install-packages deb package web url
+      -u|--package-url PACKAGE_URL  Contrail-install-packages deb package web url (http:// or https://) or scp path
+                                    (ssh://<server ip/name/< package path>), if url is provided, the
+                                    package will be installed and setup local repo.
+                                    In case of scp, user name and password will be read from environment variables
+                                    SSHUSER - user name to be used during scp
+                                    SSHPASS - user password to be used during scp
       -c|--use-cache                Use docker cache for the build
       -e|--export EXPORT_PATH       Export Container image to the path provided
 
@@ -248,9 +263,15 @@ There is a script (install.sh) which build docker containers for both contrail-t
 
      Example:
 
-      ./install.sh docker-build --test-repo https://github.com/hkumarmk/contrail-test --test-ref working --ci-repo \
-        https://$GITUSER:$GITPASS@github.com/juniper/contrail-test-ci -e /tmp/export2 \
-        -u http://nodei16/contrail-install-packages_2.21-105~juno_all.deb contrail-test
+      $ ./install.sh docker-build --test-repo https://github.com/hkumarmk/contrail-test --test-ref working
+            --ci-repo https://$GITUSER:$GITPASS@github.com/juniper/contrail-test-ci -e /tmp/export2
+            -u http://nodei16/contrail-install-packages_2.21-105~juno_all.deb contrail-test
+
+      $ export SSHUSER=user1 SSHPASS=password
+      $ ./install.sh docker-build --test-repo https://github.com/hkumarmk/contrail-test --test-ref working
+            --ci-repo https://$GITUSER:$GITPASS@github.com/juniper/contrail-test-ci -e /tmp/export2
+            -u ssh://nodei16/var/cache/artifacts/contrail-install-packages_2.21-105~juno_all.deb contrail-test
+
 
 - Docker build with artifacts
 
